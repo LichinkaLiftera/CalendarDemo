@@ -2,7 +2,6 @@ package org.example;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -40,68 +39,68 @@ public class Main extends Application {
         });
         //Выбор конечной даты
 
-        VBox dateBox = new VBox(5, new Label("Start date"), startPicker, new Label("End date"), endPicker);
-
-        ObservableList<String> weekDays = FXCollections.observableArrayList
-                ("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-        Spinner<String> weekDaysSelect = new Spinner<>(weekDays);
-
-//        HBox weekDaysHbox = new HBox(10, weekDaysSelect, actWeekDays);
-//        VBox weekDaysVbox = new VBox(weekDaysHbox, new Label("Day of week"));
-
-        Spinner<Integer> dateSpin = new Spinner<>(1, 31, 1);
-//        CheckBox actDate = new CheckBox();
-//        HBox dateHbox = new HBox(10, dateSpin, actDate);
-//        VBox dateVbox = new VBox(new Label("Date"), dateHbox);
-
+        VBox dateBox = new VBox(5, new Label("Начальная дата"), startPicker,
+                new Label("Конечная дата"), endPicker);
 
         //Выбор необходимых дней для выборки и их повторов
+        Spinner<Integer> sunday = new Spinner<>(0, 99, 0);
         Spinner<Integer> monday = new Spinner<>(0, 99, 0);
         Spinner<Integer> tuesday = new Spinner<>(0, 99, 0);
         Spinner<Integer> wednesday = new Spinner<>(0, 99, 0);
         Spinner<Integer> thursday = new Spinner<>(0, 99, 0);
         Spinner<Integer> friday = new Spinner<>(0, 99, 0);
         Spinner<Integer> saturday = new Spinner<>(0, 99, 0);
-        Spinner<Integer> sunday = new Spinner<>(0, 99, 0);
         CheckBox actWeekDays = new CheckBox();
-        HBox actLabelBox = new HBox(10, new Label("Days of Week"), actWeekDays);
-        VBox days = new VBox(5, monday, tuesday, wednesday, thursday, friday, saturday, sunday,actLabelBox);
+        HBox actLabelBox = new HBox(10, new Label("День недели"), actWeekDays);
+        VBox days = new VBox(5, monday, tuesday, wednesday, thursday, friday, saturday, sunday, actLabelBox);
         days.setMaxWidth(100);
         //Выбор необходимых дней для выборки и их повторов
 
         //Выбор необходимой даты
-        Spinner<Integer> mondayDate = new Spinner<>(1, 31, 1);
-        Spinner<Integer> tuesdayDate = new Spinner<>(1, 31, 1);
-        Spinner<Integer> wednesdayDate = new Spinner<>(1, 31, 1);
-        Spinner<Integer> thursdayDate = new Spinner<>(1, 31, 1);
-        Spinner<Integer> fridayDate = new Spinner<>(1, 31, 1);
-        Spinner<Integer> saturdayDate = new Spinner<>(1, 31, 1);
-        Spinner<Integer> sundayDate = new Spinner<>(1, 31, 1);
+        Spinner<Integer> sundayDate = new Spinner<>(0, 31, 0);
+        Spinner<Integer> mondayDate = new Spinner<>(0, 31, 0);
+        Spinner<Integer> tuesdayDate = new Spinner<>(0, 31, 0);
+        Spinner<Integer> wednesdayDate = new Spinner<>(0, 31, 0);
+        Spinner<Integer> thursdayDate = new Spinner<>(0, 31, 0);
+        Spinner<Integer> fridayDate = new Spinner<>(0, 31, 0);
+        Spinner<Integer> saturdayDate = new Spinner<>(0, 31, 0);
         CheckBox actDate = new CheckBox();
-        HBox dateLabelBox = new HBox(5,actDate, new Label("Date"));
-        VBox daysDateBox = new VBox(5, mondayDate, tuesdayDate, wednesdayDate, thursdayDate, fridayDate, saturdayDate, sundayDate,dateLabelBox);
+        HBox dateLabelBox = new HBox(5, actDate, new Label("Число"));
+        VBox daysDateBox = new VBox(5, mondayDate, tuesdayDate, wednesdayDate,
+                thursdayDate, fridayDate, saturdayDate, sundayDate, dateLabelBox);
         daysDateBox.setMaxWidth(100);
         //Выбор необходимой даты
 
         //Лэйблы
-        VBox daysLabels = new VBox(13, new Label("Monday"), new Label("Tuesday"), new Label("Wednesday")
-                , new Label("Thursday"), new Label("Friday"), new Label("Saturday"), new Label("Sunday"));
+        VBox daysLabels = new VBox(13, new Label("Понедельник"), new Label("Вторник"), new Label("Среда")
+                , new Label("Четверг"), new Label("Пятница"), new Label("Суббота"), new Label("Воскресенье"));
         //Лэйблы
 
+        //Блок вью день-дата
         HBox daysBox = new HBox(5, days, daysLabels, daysDateBox);
+        //Блок вью день-дата
 
+        ListView<String> resultView = new ListView<>();
 
-        ListView <String> resultView = new ListView<>();
-
-        Button searchButton = new Button("Search");
+        Button searchButton = new Button("Поиск");
         searchButton.setMaxWidth(150);
+
         searchButton.setOnAction(actionEvent -> {
             if (actWeekDays.isSelected() && actDate.isSelected()) {
-                resultView.setItems(FXCollections.observableArrayList(dataSearch.search(weekDaysSelect.getValue(), dateSpin.getValue())));
+                int[] dayOfWeek = new int[]{0, sunday.getValue(), monday.getValue(), tuesday.getValue(),
+                        wednesday.getValue(), thursday.getValue(), friday.getValue(), saturday.getValue()};
+                int[] dayOfMonth = new int[]{0, sundayDate.getValue(), mondayDate.getValue(), tuesdayDate.getValue(),
+                        wednesdayDate.getValue(), thursdayDate.getValue(), fridayDate.getValue(), saturdayDate.getValue()};
+                resultView.setItems(FXCollections.observableArrayList(
+                        dataSearch.search(dayOfWeek, dayOfMonth)));
             } else if (!actWeekDays.isSelected() && actDate.isSelected()) {
-                resultView.setItems(FXCollections.observableArrayList(dataSearch.search(dateSpin.getValue())));
+                int[] dayOfMonth = new int[]{sundayDate.getValue(), mondayDate.getValue(), tuesdayDate.getValue(),
+                        wednesdayDate.getValue(), thursdayDate.getValue(), fridayDate.getValue(), saturdayDate.getValue()};
+                resultView.setItems(FXCollections.observableArrayList(dataSearch.searchDate(dayOfMonth)));
             } else if (actWeekDays.isSelected() && !actDate.isSelected()) {
-                resultView.setItems(FXCollections.observableArrayList(dataSearch.search(weekDaysSelect.getValue())));
+                int[] dayOfWeek = new int[]{0, sunday.getValue(), monday.getValue(), tuesday.getValue(),
+                        wednesday.getValue(), thursday.getValue(), friday.getValue(), saturday.getValue()};
+                resultView.setItems(FXCollections.observableArrayList(dataSearch.searchDay(dayOfWeek)));
             }
         });
 
@@ -112,7 +111,7 @@ public class Main extends Application {
         HBox.setHgrow(selectBox, Priority.ALWAYS);
         HBox.setHgrow(resultView, Priority.ALWAYS);
 
-        Scene scene = new Scene(mainBox, 600, 500);
+        Scene scene = new Scene(mainBox, 700, 500);
         stage.setTitle("Days search engine");
         stage.setScene(scene);
         stage.show();

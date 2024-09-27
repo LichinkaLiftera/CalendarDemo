@@ -7,9 +7,8 @@ import java.util.*;
 
 public class DataSearch {
     private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-    private final DateFormat format1 = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-    private final DateFormat format2 = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ENGLISH);
-    private final String[] daysOfWeek = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    private final DateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
+    private final DateFormat format2 = new SimpleDateFormat("EEEE dd MMMM yyyy");
 
 
     private String startDate;
@@ -25,44 +24,61 @@ public class DataSearch {
 
     }
 
-    public List<String> search(int dayOfMonth) {
+    public List<String> searchDate(int[] dayOfMonth) {
         refresh();
         List<String> result = new LinkedList<>();
         for (int i = 0; i < period; i++) {
-            if (calendar.get(Calendar.DAY_OF_MONTH) == dayOfMonth) {
-                result.add(format1.format(calendar.getTime())
-                        + "      " +
-                        format2.format(calendar.getTime()));
+            for (int x : dayOfMonth) {
+                if (x != 0 && calendar.get(Calendar.DAY_OF_MONTH) == x) {
+                    result.add(format1.format(calendar.getTime())
+                            + "      " +
+                            format2.format(calendar.getTime()));
+                }
             }
             calendar.add(Calendar.DATE, 1);
         }
         return result;
     }
 
-    public List<String> search(String dayOfWeek) {
-        int weekDay = Arrays.asList(daysOfWeek).indexOf(dayOfWeek);
+    public List<String> searchDay(int[] dayOfWeek) {
         refresh();
         List<String> result = new LinkedList<>();
         for (int i = 0; i < period; i++) {
-            if (calendar.get(Calendar.DAY_OF_WEEK) == weekDay) {
-                result.add(format1.format(calendar.getTime())
-                        + "      " +
-                        format2.format(calendar.getTime()));
+            for (int y = 1; y < dayOfWeek.length; y++) {
+                if (dayOfWeek[y] != 0 && calendar.get(Calendar.DAY_OF_WEEK) == y) {
+                    for (int x = 0; x < dayOfWeek[y]; x++) {
+                        result.add(format1.format(calendar.getTime())
+                                + "      " +
+                                format2.format(calendar.getTime()));
+                    }
+                }
+
             }
             calendar.add(Calendar.DATE, 1);
         }
         return result;
     }
 
-    public List<String> search(String dayOfWeek, int dayOfMonth) {
-        int weekDay = Arrays.asList(daysOfWeek).indexOf(dayOfWeek);
+    public List<String> search(int[] dayOfWeek, int[] dayOfMonth) {
         refresh();
         List<String> result = new LinkedList<>();
         for (int i = 0; i < period; i++) {
-            if (calendar.get(Calendar.DAY_OF_WEEK) == weekDay && calendar.get(Calendar.DAY_OF_MONTH) == dayOfMonth) {
-                result.add(format1.format(calendar.getTime())
-                        + "      " +
-                        format2.format(calendar.getTime()));
+            for (int x = 0; x < dayOfWeek.length; x++) {
+                if (dayOfWeek[x] != 0) {
+                    for (int k : dayOfMonth) {
+                        if (k != 0) {
+                            if (calendar.get(Calendar.DAY_OF_WEEK) == x &&
+                                    calendar.get(Calendar.DAY_OF_MONTH) == k) {
+                                for (int y = 0; y < dayOfWeek[x]; y++) {
+                                    result.add(format1.format(calendar.getTime())
+                                            + "      " +
+                                            format2.format(calendar.getTime()));
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
             calendar.add(Calendar.DATE, 1);
         }
