@@ -42,7 +42,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javaFx.version>18.0.1</javaFx.version><properties/>
+        <javaFx.version>18.0.1</javaFx.version>
+        <properties/>
     </properties>
 
     <dependencies>
@@ -77,13 +78,6 @@
             <artifactId>javafx-graphics</artifactId>
             <version>${javaFx.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javaFx.version}</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.openjfx</groupId>

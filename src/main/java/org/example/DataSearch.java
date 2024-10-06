@@ -15,7 +15,6 @@ public class DataSearch {
     private String endDate;
     private int period;
     private Calendar calendar;
-    private String[] crutch;
 
     public DataSearch(String start, String end) {
 
@@ -26,19 +25,26 @@ public class DataSearch {
 
     public List<String> searchDate(int[] dayOfMonth) {
         refresh();
+
         List<String> result = new LinkedList<>();
+        long start = System.currentTimeMillis();
         for (int i = 0; i < period; i++) {
-            for (int x : dayOfMonth) {
-                if (x != 0 && calendar.get(Calendar.DAY_OF_MONTH) == x) {
+            Arrays.stream(dayOfMonth).forEach(day ->
+            {
+                if (day != 0 && calendar.get(Calendar.DAY_OF_MONTH) == day) {
                     result.add(format1.format(calendar.getTime())
                             + "      " +
                             format2.format(calendar.getTime()));
                 }
-            }
+            });
             calendar.add(Calendar.DATE, 1);
         }
+        System.out.println(System.currentTimeMillis()-start);
         return result;
+
+
     }
+
 
     public List<String> searchDay(int[] dayOfWeek) {
         refresh();
@@ -50,7 +56,7 @@ public class DataSearch {
                         result.add(format1.format(calendar.getTime())
                                 + "      " +
                                 format2.format(calendar.getTime()));
-                    }
+                    }//Oh no! Anyway
                 }
 
             }
@@ -58,6 +64,7 @@ public class DataSearch {
         }
         return result;
     }
+
 
     public List<String> search(int[] dayOfWeek, int[] dayOfMonth) {
         refresh();
@@ -74,7 +81,7 @@ public class DataSearch {
                                             + "      " +
                                             format2.format(calendar.getTime()));
 
-                                }
+                                } //No!God!Please!No! Anyway
                             }
                         }
                     }
@@ -83,10 +90,11 @@ public class DataSearch {
             calendar.add(Calendar.DATE, 1);
         }
         return result;
-    }
+    } //Don't reveal!
 
     private void refresh() {
-        this.crutch = startDate.split("-");
+        String[] crutch;
+        crutch = startDate.split("-");
         this.calendar = new GregorianCalendar(Integer.parseInt(crutch[0]),
                 Integer.parseInt(crutch[1]) - 1, Integer.parseInt(crutch[2]));
         try {
